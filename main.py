@@ -1,107 +1,110 @@
 import matplotlib.pyplot as plt
 import polars as pl
+import os
 
 dataset = "https://raw.githubusercontent.com/fivethirtyeight/data/master/airline-safety/airline-safety.csv"
 
+output_folder = "visualizations"
+os.makedirs(output_folder, exist_ok=True)
+
 
 def load_dataset():
-    df = pl.read_csv(dataset)
-    return df
+    """Load the dataset once and reuse it."""
+    return pl.read_csv(dataset)
 
-def general_polars_describe():
-    """polars describe function in csv"""
-    polars_df = pl.read_csv(dataset)
-    return polars_df.median(), polars_df.describe()
+
+def general_polars_describe(df):
+    """Return the median and description of the dataset."""
+    return df.median(), df.describe()
 
 
 def bar_visual(df, col):
-    """bar graph of a column over all airlines"""
-    x = df["airline"]
-    y = df[col]
+    """Create a bar graph for a specific column."""
+    x = df["airline"].to_list()  # Convert to list for plotting
+    y = df[col].to_list()
     plt.figure(figsize=(15, 12))
     plt.bar(x, y)
     plt.xlabel("Airlines")
     plt.ylabel(col)
     plt.title(f"{col} over Airlines")
     plt.xticks(rotation=90, fontsize=6)
-    plt.savefig(f"{col}.png")
+    plt.savefig(f"{output_folder}/{col}.png")
+    plt.close()  # Close the figure after saving to avoid memory leaks
 
 
 def hist_visual(df, col):
-    """histogram of a column over all airlines"""
+    """Create a histogram for a specific column."""
     plt.figure(figsize=(10, 6))
-    plt.hist(df[col])
+    plt.hist(df[col].to_list())  # Convert to list for plotting
     plt.xlabel(f"Number of {col}")
     plt.ylabel("Frequency")
     plt.title(f"Frequency of {col}")
-    plt.savefig(f"Frequency_{col}_hist.png")
+    plt.savefig(f"{output_folder}/Frequency_{col}_hist.png")
+    plt.close()  # Close the figure after saving to avoid memory leaks
 
 
-def general_viz_combined(general_df):
-    """saves all the figures at once"""
-    bar_visual(general_df, "incidents_85_99")
-    hist_visual(general_df, "incidents_85_99")
-    bar_visual(general_df, "fatal_accidents_85_99")
-    hist_visual(general_df, "fatal_accidents_85_99")
-    bar_visual(general_df, "fatalities_85_99")
-    hist_visual(general_df, "fatalities_85_99")
-    bar_visual(general_df, "incidents_00_14")
-    hist_visual(general_df, "incidents_00_14")
-    bar_visual(general_df, "fatal_accidents_00_14")
-    hist_visual(general_df, "fatal_accidents_00_14")
-    bar_visual(general_df, "fatalities_00_14")
-    hist_visual(general_df, "fatalities_00_14")
-    plt.pyplot.close()
+def general_viz_combined(df):
+    """Generate visualizations for specific columns."""
+    columns = [
+        "incidents_85_99",
+        "fatal_accidents_85_99",
+        "fatalities_85_99",
+        "incidents_00_14",
+        "fatal_accidents_00_14",
+        "fatalities_00_14",
+    ]
+
+    for col in columns:
+        bar_visual(df, col)
+        hist_visual(df, col)
 
 
-def save_to_md():
-    """save to markdown"""
-    df = load_dataset()
+def format_polars_table(df):
+    """Formats a Polars DataFrame for markdown output."""
+    headers = " | ".join(df.columns)
+    markdown = f"| {headers} |\n"
+    markdown += "| " + " | ".join("---" for _ in df.columns) + " |\n"
+
+    for row in df.rows():
+        markdown += "| " + " | ".join(map(str, row)) + " |\n"
+
+    return markdown
+
+
+def save_to_md(df):
+    """Save the report to a markdown file with visualizations."""
+    # Generate visualizations
     general_viz_combined(df)
-    """generate an md file with outputs"""
-    markdown_table1, markdown_table2 = general_polars_describe()
-    markdown_table1 = str(markdown_table1)
-    markdown_table2 = str(markdown_table2)
+
+    # Get the descriptive statistics
+    median_df, describe_df = general_polars_describe(df)
+
+    # Format Polars DataFrames for markdown
+    median_str = format_polars_table(median_df)
+    describe_str = format_polars_table(describe_df)
+
+    # Write the report to markdown
     with open("report.md", "w", encoding="utf-8") as file:
         file.write("# Report\n\n")
         file.write("## General Description\n\n")
-        file.write(f"{markdown_table1}\n\n")
-        file.write(f"{markdown_table2}\n\n")
+        file.write(f"### Description\n\n{describe_str}\n\n")
+        file.write(f"### Median\n\n{median_str}\n\n")
+
         file.write("## Visualizations\n\n")
-        file.write("### Incidents 85-99\n\n")
-        file.write("![Incidents 85-99](incidents_85_99.png)\n\n")
-        file.write("![Incidents 85-99](Frequency_incidents_85_99_hist.png)\n\n")
-        file.write("### Fatal Accidents 85-99\n\n")
-        file.write(
-            "![Fatal Accidents 85-99](fatal_accidents_85_99.png)\n\n"
-        )
-        file.write(
-            "![Fatal Accidents 85-99] \
-                (Frequency_fatal_accidents_85_99_hist.png)\n\n"
-        )
-        file.write("### Fatalities 85-99\n\n")
-        file.write("![Fatalities 85-99](fatalities_85_99.png)\n\n")
-        file.write(
-            "![Fatalities 85-99](Frequency_fatalities_85_99_hist.png)\n\n"
-        )
-        file.write("### Incidents 00-14\n\n")
-        file.write("![Incidents 00-14](incidents_00_14.png)\n\n")
-        file.write("![Incidents 00-14](Frequency_incidents_00_14_hist.png)\n\n")
-        file.write("### Fatal Accidents 00-14\n\n")
-        file.write(
-            "![Fatal Accidents 00-14](fatal_accidents_00_14.png)\n\n"
-        )
-        file.write(
-            "![Fatal Accidents 00-14] \
-                (Frequency_fatal_accidents_00_14_hist.png)\n\n"
-        )
-        file.write("### Fatalities 00-14\n\n")
-        file.write("![Fatalities 00-14](fatalities_00_14.png)\n\n")
-        file.write(
-            "![Fatalities 00-14](Frequency_fatalities_00_14_hist.png)\n\n"
-        )
+        sections = ["Incidents", "Fatal Accidents", "Fatalities"]
+        periods = ["85_99", "00_14"]
 
+        for section in sections:
+            for period in periods:
+                file.write(f"### {section} {period}\n\n")
 
-if __name__ == "__main__":
-    general_viz_combined(load_dataset())
-    save_to_md()
+                image_path = f"visualizations/{section.lower()}_{period}.png"
+                hist_image_path = (
+                    f"visualizations/Frequency_{section.lower()}_{period}_hist.png"
+                )
+
+                # Write bar chart image
+                file.write(f"![{section} {period}]({image_path})\n\n")
+
+                # Write histogram image
+                file.write(f"![{section} {period}]({hist_image_path})\n\n")

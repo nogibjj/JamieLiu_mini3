@@ -2,6 +2,23 @@
 
 ## Overview
 
+In this project, I transform the previous project (Pandas descriptive statistics) into generating descriptive statistics on datasets using Polars.
+I'm using the airline safety dataset.
+
+### `main.py`
+
+The `main.py` script defines the core functions used to load the dataset, calculate descriptive statistics, and generate various visualizations (bar charts and histograms). The visualizations illustrate metrics such as incidents, fatal accidents, and fatalities across different time periods. The results, including the descriptive statistics, are saved in a markdown report with linked visualizations. The key functions implemented are:
+
+- `load_dataset()`: Loads the airline safety dataset using Polars.
+- `general_polars_describe()`: Calculates the median and general description of the dataset.
+- `bar_visual()` and `hist_visual()`: Generate bar charts and histograms for specified columns.
+- `general_viz_combined()`: Creates all required visualizations.
+- `save_to_md()`: Exports the descriptive statistics and visualizations into a markdown report.
+
+### `test_main.py`
+
+The `test_main.py` script is designed to import the functions from `main.py` and execute them to generate the visualizations and markdown report. This script tests the entire process of loading the dataset, computing statistics, generating visualizations, and writing the output to a markdown file, ensuring that all the functionality implemented in `main.py` works as expected.
+
 ## Features
 
 - `.devcontainer` configuration for a consistent Python development environment using Docker.
@@ -53,16 +70,12 @@
    make all
    ```
 
-## **Summary Statistics**:
-
-![Alt text](statistics.png)
-
-## **Visualization Example**:
+## **Example Visualizations**:
 
 ### Fatalities 00-14
 
-![Fatalities 00-14](fatalities_00_14_over_Airlines.png)
+![Fatalities 00-14](visualizations/fatalities_00_14.png)
 
-![Fatalities 00-14](Frequency_of_fatalities_00_14_histogram.png)
+![Fatalities 00-14](visualizations/Frequency_fatalities_00_14_hist.png)
 
 See detailed statistics and visualizations in this [report](/report.md)
