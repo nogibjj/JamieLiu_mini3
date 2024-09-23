@@ -91,7 +91,7 @@ def save_to_md(df):
         file.write(f"### Median\n\n{median_str}\n\n")
 
         file.write("## Visualizations\n\n")
-        sections = ["Incidents", "Fatal Accidents", "Fatalities"]
+        sections = ["Incidents", "Fatal_Accidents", "Fatalities"]
         periods = ["85_99", "00_14"]
 
         for section in sections:
