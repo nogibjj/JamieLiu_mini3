@@ -38,17 +38,17 @@
 
 ![Incidents 00_14](visualizations/Frequency_incidents_00_14_hist.png)
 
-### Fatal Accidents 85_99
+### Fatal_Accidents 85_99
 
-![Fatal Accidents 85_99](visualizations/fatal accidents_85_99.png)
+![Fatal_Accidents 85_99](visualizations/fatal_accidents_85_99.png)
 
-![Fatal Accidents 85_99](visualizations/Frequency_fatal accidents_85_99_hist.png)
+![Fatal_Accidents 85_99](visualizations/Frequency_fatal_accidents_85_99_hist.png)
 
-### Fatal Accidents 00_14
+### Fatal_Accidents 00_14
 
-![Fatal Accidents 00_14](visualizations/fatal accidents_00_14.png)
+![Fatal_Accidents 00_14](visualizations/fatal_accidents_00_14.png)
 
-![Fatal Accidents 00_14](visualizations/Frequency_fatal accidents_00_14_hist.png)
+![Fatal_Accidents 00_14](visualizations/Frequency_fatal_accidents_00_14_hist.png)
 
 ### Fatalities 85_99
 
