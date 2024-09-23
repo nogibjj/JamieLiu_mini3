@@ -1,5 +1,7 @@
 # JamieLiu_mini3
 
+[![CI](https://github.com/nogibjj/JamieLiu_mini3/actions/workflows/cicd.yml/badge.svg)](https://github.com/nogibjj/JamieLiu_mini3/actions/workflows/cicd.yml)
+
 ## Overview
 
 In this project, I transform the previous project (Pandas descriptive statistics) into generating descriptive statistics on datasets using Polars.
